@@ -1,0 +1,3 @@
+3.a.2 It is quite clear that the IMDB Rating vs Budget scatterplot separates the classes better. There is a lot of crowding in the IMDB Rating vs WinsNoms scatterplot and it may look better with a log transformed dataset based on the data spread
+
+3.c We would want to use a square root or log scale transformation when one of our variables to plot is highly skewed. The severity of the skewing denotes which transformation to use. A box-cox transform may also be used to identify optimal transform power. 
