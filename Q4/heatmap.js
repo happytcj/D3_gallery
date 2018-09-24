@@ -37,11 +37,15 @@ d3.csv("heatmap.csv", function(rows) {
 
   // Discrete color array acquired from https://bl.ocks.org/mbostock/5577023
   var colors = ["#fff5f0","#fee0d2","#fcbba1","#fc9272","#fb6a4a","#ef3b2c","#cb181d","#a50f15","#67000d"].reverse()
+  var colors_reversed = colors.reverse()
   z = d3.scale.quantile();
-  z.domain([0, buckets-1, d3.max(dataset1, function(d) { return d.count; })]).range(colors);
+  z.domain([
+    d3.min(dataset1, function(d) { return d.count; }),
+    buckets-1, 
+    d3.max(dataset1, function(d) { return d.count; })]).range(colors);
 
   var bookLabels = svg.selectAll(".bookLabel")
-      .data(bookorder)
+      .data(bookorder.reverse())
       .enter().append("text")
         .text(function (d) { return d; })
         .attr("x", 0)
@@ -73,21 +77,24 @@ d3.csv("heatmap.csv", function(rows) {
       .attr("height",  gridSize)
       .style("fill", function(d) { return z(d.count); });
 
-  // Add a legend for the color values.
-  // var legend = svg.selectAll(".legend")
-  //     .data(z.ticks(6).slice(1).reverse())
-  //   .enter().append("g")
-  //     .attr("class", "legend")
-  //     .attr("transform", function(d, i) { return "translate(" + (width + 20) + "," + (20 + i * 20) + ")"; });
+  var legend = svg.selectAll(".legend")
+      .data([0].concat(z.quantiles()), function(d) { return d; });
 
-  // legend.append("rect")
-  //     .attr("width", 20)
-  //     .attr("height", 20)
-  //     .style("fill", z);
+  legend.enter().append("g")
+      .attr("class", "legend");
 
-  // legend.append("text")
-  //     .attr("x", 26)
-  //     .attr("y", 10)
-  //     .attr("dy", ".35em")
-  //     .text(String);
+  legend.append("rect")
+    .attr("x", function(d, i) { return gridSize * i; })
+    .attr("y", height + 100)
+    .attr("width", gridSize)
+    .attr("height", gridSize / 2)
+    .style("fill", function(d, i) { return colors_reversed[i]; });
+
+  legend.append("text")
+    .attr("class", "mono")
+    .text(function(d) { return "≥ " + Math.round(d); })
+    .attr("x", function(d, i) { return gridSize * i; })
+    .attr("y", height + gridSize + 80);
+
+  legend.exit().remove();
 });
