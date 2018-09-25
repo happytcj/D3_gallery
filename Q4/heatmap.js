@@ -128,10 +128,11 @@ function updateHeatmap(selected_house) {
          .attr("y", height+90)
          .attr("dy", ".35em")
          .text("# of Spells");
-
-    // legend.exit().remove();
   });
 };
+
+d3.select('#dropdown')
+.attr("x", width)
 
 d3.select('#dropdown')
     .on("change", function () {
@@ -143,4 +144,3 @@ d3.select('#dropdown')
 var sect = document.getElementById("dropdown");
 var selected_house = sect.options[sect.selectedIndex].value;
 updateHeatmap(selected_house);
-// sect.options[sect.selectedIndex].value="Slytherin"
