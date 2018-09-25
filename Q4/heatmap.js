@@ -1,4 +1,4 @@
-var buckets = 9
+var colorSteps = 9
 var margin = {top: 120, right: 90, bottom: 170, left: 150},
     width = 700 - margin.left - margin.right,
     height = 700 - margin.top - margin.bottom,
@@ -41,7 +41,7 @@ d3.csv("heatmap.csv", function(rows) {
   z = d3.scale.quantile();
   z.domain([
     d3.min(dataset1, function(d) { return d.count; }),
-    buckets-1, 
+    colorSteps, 
     d3.max(dataset1, function(d) { return d.count; })]).range(colors);
 
   var bookLabels = svg.selectAll(".bookLabel")
@@ -77,6 +77,28 @@ d3.csv("heatmap.csv", function(rows) {
       .attr("height",  gridSize)
       .style("fill", function(d) { return z(d.count); });
 
+  svg.append("text")
+       .attr("class", "label")
+       .attr("x", -width/2)
+       .attr("y", -120)
+       .attr("dy", ".35em")
+       .attr("transform", "rotate(-90)")
+       .text("Book");
+
+  svg.append("text")
+       .attr("class", "label")
+       .attr("x", width/2)
+       .attr("y", -70)
+       .attr("dy", ".35em")
+       .text("Spell Type");
+
+  svg.append("text")
+       .style("font", "18px sans-serif")
+       .attr("x", width/2-130)
+       .attr("y", -100)
+       .attr("dy", ".35em")
+       .text("Visualizing Wizarding Houses & Spells");
+
   var legend = svg.selectAll(".legend")
       .data([0].concat(z.quantiles()), function(d) { return d; });
 
@@ -96,5 +118,36 @@ d3.csv("heatmap.csv", function(rows) {
     .attr("x", function(d, i) { return gridSize * i; })
     .attr("y", height + gridSize + 80);
 
+  svg.append("text")
+       .attr("class", "label")
+       .attr("x", width-10)
+       .attr("y", height+90)
+       .attr("dy", ".35em")
+       .text("# of Spells");
+
   legend.exit().remove();
+
+  d3.select('#dropdown')
+      .on("change", function () {
+        // var sect = document.getElementById("dropdown");
+        var section = sect.options[sect.selectedIndex].value;
+
+        // data = filterJSON(json, 'produce', section);
+
+        
+        // //debugger
+        
+        // data.forEach(function(d) {
+        //   d.value = +d.value;
+        //   //d.year = parseDate(String(d.year));
+        //   d.active = true;
+        // });
+        
+        
+        // //debugger
+        // updateGraph(data);
+
+
+        jQuery('h1.page-header').html(section);
+      });
 });
