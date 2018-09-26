@@ -2,10 +2,6 @@ body {
     font-family: "Arial", sans-serif;
 }
 
-.bar {
-    fill: #5f89ad;
-}
-
 .axis {
     font-size: 13px;
 }
@@ -18,4 +14,10 @@ body {
 
 .label {
     font-size: 13px;
+}
+
+.white-label {
+    font-size: 12px;
+    stroke:white;
+    fill:white;
 }
