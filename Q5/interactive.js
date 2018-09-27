@@ -16,7 +16,6 @@ function compare(a,b) {
 }
 data = data.sort(compare);
 
-//set up svg using margin conventions - we'll need plenty of room on the left for labels
 var margin = {
     top: 15,
     right: 25,
@@ -104,8 +103,8 @@ function showLineChart(city, growth, pop2012) {
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
             .append("g")
-            .attr("transform", 
-                  "translate(" +margin.left + "," +margin.top + ")");
+            .attr("transform", "translate(" +margin.left + "," +margin.top + ")");
+            // .attr("transform", "translate( 100, 100)");
 
     x.domain(d3.extent(dataset1, function(d) { return d.year; }));
     // y.domain(d3.extent(dataset1, function(d) { return d.pct_change; }));
@@ -139,7 +138,7 @@ bars.append("rect")
     .attr("x", 0)
     .attr("fill", "gray")
     .attr("width", function (d) {
-        return x(d.population_2012);
+        return x(d.population_2012+d.growth.year_2013+d.growth.year_2014+d.growth.year_2015+d.growth.year_2016+d.growth.year_2017);
     })
     .on("mouseover", function(d) {
         d3.select(this).attr("fill", "red");
@@ -162,5 +161,5 @@ bars.append("text")
         return 5;
     })
     .text(function (d) {
-        return d.population_2012;
+        return d.population_2012+d.growth.year_2013+d.growth.year_2014+d.growth.year_2015+d.growth.year_2016+d.growth.year_2017;
     });
