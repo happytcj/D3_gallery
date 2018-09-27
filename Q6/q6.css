@@ -5,8 +5,19 @@
 	stroke-linejoin: round;
 }
 
-.states {
-  fill: none;
-  stroke: #fff;
-  stroke-linejoin: round;
+.d3-tip {
+  line-height: 1;
+  font-weight: bold;
+  padding: 2px;
+  font-size : 15px;
+  background: rgba(0, 0, 0, 0.75);
+  color: white;
+  border-radius: 2px;
+}
+
+/* Style northward tooltips differently */
+.d3-tip.n:after {
+  margin: -1px 0 0 0;
+  top: 100%;
+  left: 0;
 }
