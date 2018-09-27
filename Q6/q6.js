@@ -15,10 +15,11 @@ d3.queue()
     .defer(d3.csv, "education.csv", function(d) { education.set(d.id, +d.percent_educated); })
     .await(draw_choropleth);
 
-var color_blues = ["#fcfbfd","#efedf5","#dadaeb","#bcbddc","#9e9ac8","#807dba","#6a51a3","#54278f","#3f007d"]
-
+// var color_blues = ["#efedf5","#dadaeb","#bcbddc", "#9e9ac8","#8c96c6","#807dba","#6a51a3","#54278f","#3f007d", "#4d004b"]
+var color_blues = ['#e6e6fa','#dcceec','#d2b9de','#c7a1d0','#bc8bc3','#b174b5','#a55ea7','#99479a','#8d2c8d','#800080']
+var steps = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90]
 color = d3.scale.quantile();
-color.domain([0, 90]).range(color_blues);
+color.domain(steps).range(color_blues);
 
 // console.log(d3.extent(education, function(d) { return d.percent_educated; }))
 
@@ -27,26 +28,41 @@ var g = svg.append("g")
     .attr("transform", "translate(0,40)");
 
 // Legend **********************************************************************************
-  // g.selectAll("rect")
-//     .data(color.range().map(function(d) {
-//         d = color.invertExtent(d);
-//         if (d[0] == null) d[0] = x.domain()[0];
-//         if (d[1] == null) d[1] = x.domain()[1];
-//         return d;
-//       })).enter().append("rect")
-//     .attr("height", 8)
-//     .attr("x", function(d) { return x(d[0]); })
-//     .attr("width", function(d) { return x(d[1]) - x(d[0]); })
-//     .attr("fill", function(d) { return color(d[0]); });
+var legend = svg.selectAll(".legend")
+    .data([0].concat(color.quantiles()), function(d) { return d; });
 
-// g.append("text")
-//     .attr("class", "caption")
-//     .attr("x", x.range()[0])
-//     .attr("y", -6)
-//     .attr("fill", "#000")
-//     .attr("text-anchor", "start")
-//     .attr("font-weight", "bold")
-//     .text("Education Statistics");
+legend.enter().append("g")
+    .attr("class", "legend");
+
+var gridSize = 50
+
+legend.append("rect")
+  .attr("x", width-100)
+  .attr("y", function(d, i) { return 25+gridSize * i; })
+  .attr("width", gridSize/2)
+  .attr("height", gridSize)
+  .style("fill", function(d, i) { return color_blues[i]; })
+  .attr("stroke-width", 1).attr("stroke", "black");
+
+legend.append("text")
+  .attr("class", "mono")
+  .text(function(d,i) { 
+    console.log(steps[i]);
+    return (steps[i]) + "%"; 
+  })
+  .attr("x", width-70)
+  .attr("y", function(d, i) { return 50+gridSize * i; });
+
+// Title
+g.append("text")
+    .attr("class", "caption")
+    .attr("x", x.range()[0])
+    .attr("y", -6)
+    .attr("fill", "#000")
+    .attr("text-anchor", "start")
+    .attr("font-weight", "bold")
+    .attr("font-size", 20)
+    .text("Education Statistics");
 // End Legend *******************************************************************************
 
 function draw_choropleth(error, us) {
