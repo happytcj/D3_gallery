@@ -62,11 +62,10 @@ var dataset1;
 var svg_mini;
 
 function showLineChart(city, growth, pop2012) {
-    var margin = {top: 30, right: 20, bottom: 30, left: 50},
-        width = 336 - margin.left - margin.right,
+    var margin = {top: 30, right: 20, bottom: 35, left: 30},
+        width = 250 - margin.left - margin.right,
         height = 175 - margin.top - margin.bottom;
 
-    // This is terrible but I'm in a rush
     dataset1 = [];
     var numYears = 5; 
     for (var i = 0; i < numYears; i++) {
@@ -125,6 +124,22 @@ function showLineChart(city, growth, pop2012) {
     svg_mini.append("g")
         .attr("class", "y axis")
         .call(yAxis);
+
+    svg_mini.append("text")
+         .attr("class", "label")
+         .attr("x", -25)
+         .attr("y", -15)
+         .attr("dy", ".35em")
+         .text("pct % change")
+         .attr("font-weight", "bold");
+
+    svg_mini.append("text")
+         .attr("class", "label")
+         .attr("x", width-20)
+         .attr("y", height+25)
+         .attr("dy", ".35em")
+         .text("year")
+         .attr("font-weight", "bold");
 
     return svg_mini
 };
