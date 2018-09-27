@@ -2,17 +2,18 @@ var svg = d3.select("svg"),
     width = +svg.attr("width"),
     height = +svg.attr("height");
 
-var unemployment = d3.map();
+var education = d3.map();
 
-var path = d3.geoPath();
+var path = d3.geo.path();
 
-var x = d3.scaleLinear()
+var x = d3.scale.linear()
     .domain([1, 10])
     .rangeRound([600, 860]);
 
-var color = d3.scaleThreshold()
+var color_blues = ["#fcfbfd","#efedf5","#dadaeb","#bcbddc","#9e9ac8","#807dba","#6a51a3","#54278f","#3f007d"]
+var color = d3.scale.threshold()
     .domain(d3.range(2, 10))
-    .range(d3.schemeBlues[9]);
+    .range(color_blues);
 
 var g = svg.append("g")
     .attr("class", "key")
@@ -38,18 +39,11 @@ g.append("text")
     .attr("fill", "#000")
     .attr("text-anchor", "start")
     .attr("font-weight", "bold")
-    .text("Unemployment rate");
-
-g.call(d3.axisBottom(x)
-    .tickSize(13)
-    .tickFormat(function(x, i) { return i ? x : x + "%"; })
-    .tickValues(color.domain()))
-  .select(".domain")
-    .remove();
+    .text("Education Statistics");
 
 d3.queue()
-    .defer(d3.json, "https://d3js.org/us-10m.v1.json")
-    .defer(d3.tsv, "unemployment.tsv", function(d) { unemployment.set(d.id, +d.rate); })
+    .defer(d3.json, "us.json")
+    .defer(d3.csv, "education.csv", function(d) { education.set(d.id, +d.percent_educated); })
     .await(ready);
 
 function ready(error, us) {
@@ -60,7 +54,7 @@ function ready(error, us) {
     .selectAll("path")
     .data(topojson.feature(us, us.objects.counties).features)
     .enter().append("path")
-      .attr("fill", function(d) { return color(d.rate = unemployment.get(d.id)); })
+      .attr("fill", function(d) { return color(d.rate = education.get(d.id)); })
       .attr("d", path)
     .append("title")
       .text(function(d) { return d.rate + "%"; });
